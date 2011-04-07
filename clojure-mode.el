@@ -751,6 +751,7 @@ check for contextual indenting."
       "ns"
       (zero-or-one "+")
       (one-or-more (any whitespace "\n"))
+      (zero-or-more ";" (zero-or-more anything) line-end)
       (zero-or-more (or (submatch (zero-or-one "#")
                                   "^{"
                                   (zero-or-more (not (any "}")))
@@ -765,6 +766,7 @@ check for contextual indenting."
 ;; for testing *namespace-name-regex*, you can evaluate this code and make
 ;; sure foo (or whatever the namespace name is) shows up in results. some of
 ;; these currently fail.
+
 ;; (mapcar (lambda (s) (let ((n (string-match *namespace-name-regex* s)))
 ;;                       (if n (match-string 4 s))))
 ;;         '("(ns foo)"
@@ -782,6 +784,16 @@ check for contextual indenting."
 ;;   aleph.netty
 ;; "
 ;;           "(ns
+;;  foo)"
+;;           "(ns ;; something
+;; foo)"
+;;           "(ns
+;; ;; something
+;; foo)"
+;;           "(ns
+;; ;; something
+;; ^:bar ^:baz
+;; ;; another
 ;;  foo)"
 ;;     "foo"))
 
